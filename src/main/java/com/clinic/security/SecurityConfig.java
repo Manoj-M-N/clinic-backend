@@ -73,6 +73,11 @@ public class SecurityConfig {
 )
 .hasAuthority("ROLE_ADMIN")
 
+.requestMatchers(
+        "/pharmacy/**"
+)
+.hasAuthority("ROLE_ADMIN")
+
 
                         // =========================================
                         // DOCTOR FEATURES
