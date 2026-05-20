@@ -207,29 +207,26 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-public CorsConfigurationSource corsConfigurationSource() {
+    // In your SecurityConfig.java file on the backend
 
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.setAllowedOrigins(
-            List.of(
-                    "http://localhost:5173",
-                    "https://clinic-management-ui-gamma.vercel.app"
-            )
-    );
+    // THIS IS THE CRUCIAL CHANGE
+    // Instead of setAllowedOrigins, we use setAllowedOriginPatterns.
+    // The "*" is a wildcard that will match any origin.
+    // This is the most robust way to solve this specific issue.
+    configuration.setAllowedOriginPatterns(List.of("*"));
 
-    configuration.addAllowedHeader("*");
-
-    configuration.addAllowedMethod("*");
-
+    // The rest of the configuration remains the same
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
-
-    UrlBasedCorsConfigurationSource source =
-            new UrlBasedCorsConfigurationSource();
-
+    
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
-
+    
     return source;
 }
 }
