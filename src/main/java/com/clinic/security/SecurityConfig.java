@@ -26,201 +26,183 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
 
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-            .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
 
-                // =========================================
-                // PUBLIC
-                // =========================================
+                        // =========================================
+                        // PUBLIC
+                        // =========================================
 
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                .requestMatchers(
-                        "/admin/login",
-                        "/doctor/login"
-                ).permitAll()
-
-
-                // =========================================
-                // PATIENT (ADMIN ONLY)
-                // =========================================
-
-                .requestMatchers(HttpMethod.GET,
-                        "/patient/**")
-                    .hasRole("ADMIN")
-
-                .requestMatchers(HttpMethod.POST,
-                        "/patient/**")
-                    .hasRole("ADMIN")
-
-                .requestMatchers(HttpMethod.PUT,
-                        "/patient/**")
-                    .hasRole("ADMIN")
-
-                .requestMatchers(HttpMethod.DELETE,
-                        "/patient/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(
+                                "/admin/login",
+                                "/doctor/login"
+                        ).permitAll()
 
 
-                // =========================================
-                // DOCTOR FEATURES
-                // =========================================
+                        // =========================================
+                        // PATIENT (ADMIN ONLY)
+                        // =========================================
 
-                // TODAY APPOINTMENTS
-                .requestMatchers(HttpMethod.GET,
-                        "/doctor/appointments/**")
-                    .hasAuthority("ROLE_DOCTOR")
+                        .requestMatchers(HttpMethod.GET,
+                                "/patient/**")
+                        .hasRole("ADMIN")
 
-                // HISTORY
-                .requestMatchers(HttpMethod.GET,
-                        "/doctor/appointments/history/**")
-                    .hasAuthority("ROLE_DOCTOR")
+                        .requestMatchers(HttpMethod.POST,
+                                "/patient/**")
+                        .hasRole("ADMIN")
 
-                // QUEUE
-                .requestMatchers(HttpMethod.GET,
-                        "/doctor/queue/**")
-                    .hasAuthority("ROLE_DOCTOR")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/patient/**")
+                        .hasRole("ADMIN")
 
-                // CALL NEXT PATIENT
-                .requestMatchers(HttpMethod.PUT,
-                        "/doctor/queue/next/**")
-                    .hasAuthority("ROLE_DOCTOR")
-
-                // START CONSULTATION
-                .requestMatchers(HttpMethod.PUT,
-                        "/appointment/start/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
-
-                // COMPLETE CONSULTATION
-                .requestMatchers(HttpMethod.PUT,
-                        "/appointment/complete/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/patient/**")
+                        .hasRole("ADMIN")
 
 
-                // =========================================
-                // CONSULTATION
-                // =========================================
+                        // =========================================
+                        // DOCTOR FEATURES
+                        // =========================================
 
-                // SAVE CONSULTATION
-                .requestMatchers(HttpMethod.POST,
-                        "/consultation/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/appointments/**")
+                        .hasAuthority("ROLE_DOCTOR")
 
-                // GET CONSULTATION
-                .requestMatchers(HttpMethod.GET,
-                        "/consultation/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/appointments/history/**")
+                        .hasAuthority("ROLE_DOCTOR")
 
-                .requestMatchers(HttpMethod.POST,
-        "/medical-history/**")
-    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/queue/**")
+                        .hasAuthority("ROLE_DOCTOR")
 
-.requestMatchers(HttpMethod.GET,
-        "/medical-history/**")
-    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
-                
-.requestMatchers(HttpMethod.GET,
-        "/emr/**")
-    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/doctor/queue/next/**")
+                        .hasAuthority("ROLE_DOCTOR")
 
-    .requestMatchers(HttpMethod.GET,
-        "/doctor/**")
-    .hasAnyAuthority(
-        "ROLE_DOCTOR",
-        "ROLE_ADMIN"
-    )
-                // =========================================
-                // PRESCRIPTION
-                // =========================================
+                        .requestMatchers(HttpMethod.PUT,
+                                "/appointment/start/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
-                // SAVE PRESCRIPTION
-                .requestMatchers(HttpMethod.POST,
-                        "/prescription/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
-
-                // GET PRESCRIPTION
-                .requestMatchers(HttpMethod.GET,
-                        "/prescription/**")
-                    .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/appointment/complete/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
 
-                // =========================================
-                // DOCTOR MANAGEMENT (ADMIN ONLY)
-                // =========================================
+                        // =========================================
+                        // CONSULTATION
+                        // =========================================
 
-                // GET ALL DOCTORS
-                .requestMatchers(HttpMethod.GET,
-                        "/doctor/all")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/consultation/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
-                // GET SINGLE DOCTOR
-                .requestMatchers(HttpMethod.GET,
-                        "/doctor/{id}")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/consultation/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
-                // CREATE DOCTOR
-                .requestMatchers(HttpMethod.POST,
-                        "/doctor")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/medical-history/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
-                // UPDATE DOCTOR
-                .requestMatchers(HttpMethod.PUT,
-                        "/doctor/{id}")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/medical-history/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
-                // DELETE DOCTOR
-                .requestMatchers(HttpMethod.DELETE,
-                        "/doctor/{id}")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/emr/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/**")
+                        .hasAnyAuthority(
+                                "ROLE_DOCTOR",
+                                "ROLE_ADMIN"
+                        )
+
+                        // =========================================
+                        // PRESCRIPTION
+                        // =========================================
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/prescription/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/prescription/**")
+                        .hasAnyAuthority("ROLE_DOCTOR", "ROLE_ADMIN")
 
 
-                // =========================================
-                // APPOINTMENT (ADMIN ONLY)
-                // =========================================
+                        // =========================================
+                        // DOCTOR MANAGEMENT (ADMIN ONLY)
+                        // =========================================
 
-                // GET APPOINTMENTS
-                .requestMatchers(HttpMethod.GET,
-                        "/appointment/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/all")
+                        .hasRole("ADMIN")
 
-                // CREATE APPOINTMENT
-                .requestMatchers(HttpMethod.POST,
-                        "/appointment/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/doctor/{id}")
+                        .hasRole("ADMIN")
 
-                // CANCEL APPOINTMENT
-                .requestMatchers(HttpMethod.PUT,
-                        "/appointment/cancel/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/doctor")
+                        .hasRole("ADMIN")
 
-                // DELETE APPOINTMENT
-                .requestMatchers(HttpMethod.DELETE,
-                        "/appointment/**")
-                    .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/doctor/{id}")
+                        .hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/doctor/{id}")
+                        .hasRole("ADMIN")
+
+
+                        // =========================================
+                        // APPOINTMENT (ADMIN ONLY)
+                        // =========================================
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/appointment/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/appointment/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/appointment/cancel/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/appointment/**")
+                        .hasRole("ADMIN")
+
+
+                        // =========================================
+                        // EVERYTHING ELSE
+                        // =========================================
+
+                        .anyRequest().authenticated()
+                )
 
                 // =========================================
-                // EVERYTHING ELSE
+                // JWT FILTER
                 // =========================================
 
-                .anyRequest().authenticated()
-            )
-
-            // =========================================
-            // JWT FILTER
-            // =========================================
-
-            .addFilterBefore(
-                    jwtFilter,
-                    UsernamePasswordAuthenticationFilter.class
-            );
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
@@ -231,15 +213,24 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+                List.of(
+                        "http://localhost:5173",
+                        "https://clinic-management-ui-gamma.vercel.app"
+                )
         );
 
         configuration.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                List.of(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
         );
 
         configuration.setAllowedHeaders(
-                List.of("Authorization", "Content-Type")
+                List.of("*")
         );
 
         configuration.setAllowCredentials(true);
