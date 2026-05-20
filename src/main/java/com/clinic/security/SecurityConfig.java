@@ -68,6 +68,11 @@ public class SecurityConfig {
                                 "/patient/**")
                         .hasRole("ADMIN")
 
+                        .requestMatchers(
+        "/medicine/**"
+)
+.hasAuthority("ROLE_ADMIN")
+
 
                         // =========================================
                         // DOCTOR FEATURES
