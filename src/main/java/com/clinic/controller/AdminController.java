@@ -13,7 +13,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin
+@CrossOrigin(
+    origins = {
+        "http://localhost:5173",
+        "https://clinic-management-ui-gamma.vercel.app"
+    }
+)
 public class AdminController {
 
     private final AdminService service;
