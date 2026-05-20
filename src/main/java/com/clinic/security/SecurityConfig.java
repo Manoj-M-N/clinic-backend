@@ -71,7 +71,10 @@ public class SecurityConfig {
                         .requestMatchers(
         "/medicine/**"
 )
-.hasAuthority("ROLE_ADMIN")
+.hasAnyAuthority(
+        "ROLE_ADMIN",
+        "ROLE_DOCTOR"
+)
 
 .requestMatchers(
         "/pharmacy/**"
