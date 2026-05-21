@@ -1,34 +1,24 @@
 package com.clinic.controller;
 
-import com.clinic.model.PharmacyOrder;
-import com.clinic.service.PharmacyService;
-
-import org.springframework.http.ResponseEntity;
+import com.clinic.model.Prescription;
+import com.clinic.service.PrescriptionService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/pharmacy")
-@CrossOrigin
-public class PharmacyController {
+@RequestMapping("/prescription")
+@CrossOrigin(origins = "http://localhost:5173")
+public class PrescriptionController {
 
-    private final PharmacyService service;
+    private final PrescriptionService service;
 
-    public PharmacyController(
-            PharmacyService service
-    ) {
+    public PrescriptionController(PrescriptionService service) {
         this.service = service;
     }
 
-    // ================= GET ALL ORDERS =================
-
-    @GetMapping
-    public ResponseEntity<List<PharmacyOrder>>
-    getAllOrders() {
-
-        return ResponseEntity.ok(
-                service.getAllOrders()
-        );
+    @PostMapping
+    public Prescription save(
+            @RequestBody Prescription prescription
+    ) {
+        return service.save(prescription);
     }
 }
