@@ -81,7 +81,12 @@ public class SecurityConfig {
 )
 .hasAuthority("ROLE_ADMIN")
 
-
+.requestMatchers(HttpMethod.GET,
+        "/pharmacy/**")
+.hasAnyAuthority(
+        "ROLE_ADMIN",
+        "ROLE_DOCTOR"
+)
                         // =========================================
                         // DOCTOR FEATURES
                         // =========================================
